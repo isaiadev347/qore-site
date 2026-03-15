@@ -1,167 +1,1233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>QORE – AI Runtime Control & NTU Economics</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #07090d;
-      color: #e5e7eb;
-      line-height: 1.6;
-    }
-    a { color: #5fd4ff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .page { max-width: 900px; margin: 0 auto; padding: 32px 16px 48px; }
-    h1, h2, h3 { color: #f9fafb; margin-top: 1.5rem; margin-bottom: 0.5rem; }
-    h1 { font-size: 2rem; }
-    h2 { font-size: 1.2rem; border-bottom: 1px solid #1f2933; padding-bottom: 0.25rem; }
-    h3 { font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.08em; color: #9ca3af; }
-    p { margin: 0.4rem 0; }
-    ul { margin: 0.4rem 0 0.4rem 1.25rem; padding: 0; }
-    li { margin: 0.25rem 0; }
-    header, footer {
-      border-bottom: 1px solid #111827;
-      padding-bottom: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-    footer {
-      border-top: 1px solid #111827;
-      border-bottom: none;
-      margin-top: 2rem;
-      padding-top: 1rem;
-      padding-bottom: 0;
-      font-size: 0.8rem;
-      color: #6b7280;
-    }
-    .badge {
-      display: inline-block;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      padding: 0.1rem 0.45rem;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      color: #9ca3af;
-      margin-left: 0.4rem;
-    }
-    .card {
-      border: 1px solid #1f2933;
-      border-radius: 6px;
-      padding: 1rem 1.1rem;
-      margin: 0.75rem 0;
-      background: #05070b;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QORE — One unit. Every model.</title>
+    <style>
+        :root {
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0a;
+            --bg-tertiary: #111111;
+            --bg-elevated: #161616;
+            --border-color: #1a1a1a;
+            --border-light: #222222;
+            --text-primary: #ffffff;
+            --text-secondary: #888888;
+            --text-muted: #555555;
+            --accent: #d97706;
+            --accent-dim: #92400e;
+            --accent-glow: rgba(217, 119, 6, 0.15);
+            --success: #22c55e;
+            --warning: #eab308;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 52px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        .logo {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--text-primary);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .github-link {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .github-link:hover {
+            color: var(--text-primary);
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-muted);
+            padding: 4px 10px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 24px 80px;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: 
+                radial-gradient(ellipse 80% 50% at 50% 0%, rgba(217, 119, 6, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 50% 100%, rgba(217, 119, 6, 0.04) 0%, transparent 40%);
+        }
+
+        .hero-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 60px 60px;
+            mask-image: radial-gradient(ellipse 70% 50% at 50% 50%, black 20%, transparent 70%);
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(217, 119, 6, 0.12) 0%, transparent 60%);
+            filter: blur(80px);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            text-align: center;
+            max-width: 720px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.2s forwards;
+        }
+
+        .hero-badge span {
+            color: var(--accent);
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 80px);
+            font-weight: 600;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.3s forwards;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.4s forwards;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.2s;
+            opacity: 0;
+            animation: fadeInUp 0.8s 0.5s forwards;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.15);
+        }
+
+        .hero-cta svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .scroll-cue {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeIn 1s 1s forwards;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 40px;
+            background: linear-gradient(to bottom, var(--text-muted), transparent);
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Metrics */
+        .metrics {
+            padding: 40px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .metric-card {
+            padding: 20px 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+        }
+
+        .metric-value.accent {
+            color: var(--accent);
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-top: 6px;
+        }
+
+        /* Sections */
+        section {
+            padding: 100px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-label {
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 20px;
+        }
+
+        .section-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 560px;
+            line-height: 1.8;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: start;
+        }
+
+        .info-visual {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .visual-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .visual-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        .visual-dot.active {
+            background: var(--success);
+        }
+
+        .visual-title {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .output-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 12px;
+        }
+
+        .output-line:last-child {
+            border-bottom: none;
+        }
+
+        .output-key {
+            color: var(--text-muted);
+        }
+
+        .output-val {
+            color: var(--text-primary);
+        }
+
+        .output-val.success {
+            color: var(--success);
+        }
+
+        .output-val.accent {
+            color: var(--accent);
+        }
+
+        /* Why Section */
+        .why-section {
+            padding: 100px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+
+        .why-card {
+            padding: 32px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+        }
+
+        .why-card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 11px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .why-card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .why-card-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Coverage Section */
+        .coverage-section {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+
+        .coverage-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .coverage-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+        }
+
+        .coverage-item {
+            padding: 24px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .coverage-item:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+        }
+
+        .coverage-icon {
+            font-size: 10px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .coverage-label {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .coverage-sub {
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .coverage-note {
+            text-align: center;
+            margin-top: 32px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Flow */
+        .flow-section {
+            padding: 100px 0;
+        }
+
+        .flow-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .flow-grid {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            position: relative;
+        }
+
+        .flow-line {
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            right: 10%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-light) 20%, var(--border-light) 80%, transparent);
+        }
+
+        .flow-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flow-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        .flow-label {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+        .flow-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            max-width: 140px;
+            margin: 0 auto;
+        }
+
+        /* Clarification */
+        .clarification-section {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .clarification-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .clarification-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .clarification-card {
+            padding: 28px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+        }
+
+        .clarification-badge {
+            display: inline-block;
+            font-size: 9px;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 4px 10px;
+            background: var(--accent-glow);
+            border-radius: 4px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .clarification-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .clarification-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* FAQ */
+        .faq-section {
+            padding: 100px 0;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .faq-grid {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* Policy */
+        .policy-section {
+            padding: 80px 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .policy-card {
+            padding: 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .policy-card-title {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .policy-card-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .disclaimer-box {
+            padding: 24px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .disclaimer-title {
+            font-size: 11px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 12px;
+        }
+
+        .disclaimer-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        .disclaimer-text p {
+            margin-bottom: 8px;
+        }
+
+        .disclaimer-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-brand {
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .footer-link {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--text-secondary);
+        }
+
+        .footer-status {
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1000px) {
+            .coverage-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .flow-grid {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .flow-step {
+                flex: 0 0 calc(33.333% - 8px);
+                margin-bottom: 24px;
+            }
+
+            .flow-line {
+                display: none;
+            }
+
+            .clarification-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .policy-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .coverage-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .flow-step {
+                flex: 0 0 100%;
+            }
+
+            .policy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="page">
     <header>
-      <h1>QORE</h1>
-      <p><strong>NTU Control Plane for AI compute.</strong></p>
-      <p>
-        QORE is software for operators and teams that need transparent AI runtime
-        pricing, routing diagnostics, and NTU‑based cost measurement across multiple
-        providers and models.
-      </p>
+        <div class="header-inner">
+            <div class="logo">QORE</div>
+            <div class="header-right">
+                <a href="https://github.com/getqore/qore" class="github-link" target="_blank">GitHub</a>
+                <div class="status-pill">
+                    <span class="status-dot"></span>
+                    All systems operational
+                </div>
+            </div>
+        </div>
     </header>
 
-    <section>
-      <h2>What QORE Does</h2>
-      <div class="card">
-        <h3>Software and Services</h3>
-        <p>QORE provides software and services for:</p>
-        <ul>
-          <li>Viewing normalized AI compute pricing across providers using an internal unit (NTU).</li>
-          <li>Inspecting routing behavior and basic diagnostics for AI workloads.</li>
-          <li>Measuring and reporting AI runtime economics to operators and finance teams.</li>
-        </ul>
-        <p>
-          QORE is not a token, cryptocurrency, or financial instrument. NTU is an internal
-          measurement unit used only inside the software to compare AI compute across
-          providers and workloads.
-        </p>
-      </div>
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-glow"></div>
+        <div class="hero-content">
+            <div class="hero-badge">
+                Control plane for AI runtime economics <span>→</span>
+            </div>
+            <h1>One unit.<br><span>Every model.</span></h1>
+            <p class="hero-sub">QORE is a routing and pricing layer for AI infrastructure. NTU (Normalized Token Unit) standardizes compute economics across providers—one key, one wallet, one control surface.</p>
+            <a href="https://github.com/getqore/qore" class="hero-cta" target="_blank">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                Open GitHub
+            </a>
+        </div>
+        <div class="scroll-cue">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
     </section>
 
-    <section>
-      <h2>What Customers Purchase</h2>
-      <div class="card">
-        <p>Customers may purchase access to QORE software and related services, which can include:</p>
-        <ul>
-          <li>Use of the QORE CLI and control plane for AI runtime pricing and diagnostics.</li>
-          <li>Assistance with integrating QORE into existing AI workflows.</li>
-          <li>Advisory services related to AI runtime cost visibility and routing policy design.</li>
-        </ul>
-        <p>
-          Unless explicitly stated otherwise at checkout, purchases are one‑time charges
-          for software and/or services, not recurring subscriptions.
-        </p>
-      </div>
+    <div class="metrics">
+        <div class="container">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value accent">NTU</div>
+                    <div class="metric-label">Normalized Token Unit</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">7</div>
+                    <div class="metric-label">SKU Categories</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">0.75%</div>
+                    <div class="metric-label">Flat Transaction Fee</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">REST</div>
+                    <div class="metric-label">API Access</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="what-is-qore">
+        <div class="container">
+            <div class="info-grid">
+                <div>
+                    <div class="section-label">Overview</div>
+                    <h2 class="section-title">What is QORE?</h2>
+                    <p class="section-text">QORE is a control plane for AI runtime pricing, diagnostics, route integrity, and NTU-based economics measurement. It sits above fragmented AI provider pricing and model ecosystems—normalizing route logic, cost representation, and usage accounting.</p>
+                    <p class="section-text" style="margin-top: 16px;">One API key across all supported providers. One wallet. Full visibility into requested-vs-actual provider and model, with drift detection and confidence scoring.</p>
+                    <p class="section-text" style="margin-top: 16px;">QORE gives operators a cleaner operating surface for AI infrastructure—reducing black-box provider confusion into transparent, measurable operations.</p>
+                </div>
+                <div class="info-visual">
+                    <div class="visual-header">
+                        <div class="visual-dot active"></div>
+                        <span class="visual-title">Route Status</span>
+                    </div>
+                    <div style="padding: 0;">
+                        <div class="output-line">
+                            <span class="output-key">requested_provider</span>
+                            <span class="output-val">openai</span>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-key">requested_model</span>
+                            <span class="output-val">gpt-4o</span>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-key">actual_provider</span>
+                            <span class="output-val success">openai</span>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-key">actual_model</span>
+                            <span class="output-val success">gpt-4o</span>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-key">route_integrity</span>
+                            <span class="output-val success">no_drift</span>
+                        </div>
+                        <div class="output-line">
+                            <span class="output-key">confidence</span>
+                            <span class="output-val accent">0.98</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section>
-      <h2>Refund and Cancellation Policy</h2>
-      <div class="card">
-        <h3>Refund Policy</h3>
-        <p>
-          All purchases are final. Refunds are only provided in the following cases:
-        </p>
-        <ul>
-          <li>Duplicate charges or verified billing errors.</li>
-          <li>Clearly unauthorized transactions.</li>
-          <li>Where a refund is required by applicable law.</li>
-        </ul>
-        <p>
-          If you believe there is a billing error or unauthorized charge, please contact
-          us first at <a href="mailto:hello@getqore.dev">hello@getqore.dev</a> so we can review and resolve the issue directly.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Subscriptions and Cancellation</h3>
-        <p>
-          QORE does not currently offer recurring subscriptions unless explicitly stated
-          at the time of purchase. If subscription services are introduced in the future,
-          the applicable terms and cancellation details will be clearly posted and presented
-          during sign‑up.
-        </p>
-      </div>
+    <section id="what-is-ntu" style="border-top: 1px solid var(--border-color);">
+        <div class="container">
+            <div class="info-grid">
+                <div class="info-visual" style="order: -1;">
+                    <div class="visual-header">
+                        <div class="visual-dot active"></div>
+                        <span class="visual-title">NTU Formula</span>
+                    </div>
+                    <div style="padding: 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px;">
+                        <div style="color: var(--text-muted); margin-bottom: 12px;">// Symbolic representation</div>
+                        <div style="color: var(--accent);">NTU<span style="color: var(--text-muted);">_s</span>(workload) = α<span style="color: var(--text-muted);">_modality</span> × work_units × c<span style="color: var(--text-muted);">_s</span></div>
+                        <div style="margin-top: 8px; color: var(--text-secondary);">USD(workload) = NTU(workload) × ntu_rate</div>
+                        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px dashed var(--border-color); font-size: 11px; color: var(--text-muted);">Exact formula constants are internal to QORE Engine</div>
+                    </div>
+                </div>
+                <div>
+                    <div class="section-label">Compute Unit</div>
+                    <h2 class="section-title">What is NTU?</h2>
+                    <p class="section-text">NTU (Normalized Token Unit) is QORE's internal unit for expressing AI compute economics across incompatible provider pricing schemes—tokens, images, seconds, runs.</p>
+                    <p class="section-text" style="margin-top: 16px;">Providers all meter differently. NTU acts as a vendor-neutral compute-value metric that normalizes cost and work across AI models and modalities—LLM calls, image generation, audio, embeddings, and more.</p>
+                    <p class="section-text" style="margin-top: 16px;">NTU is part of the broader QORE project logic, not just a cosmetic label. It enables a single budget and routing policy across your entire AI stack.</p>
+                    <p class="section-text" style="margin-top: 16px; font-size: 12px; color: var(--text-muted);"><em>NTU is not a token, currency, cryptocurrency, or financial asset of any kind.</em></p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section>
-      <h2>Contact and Support</h2>
-      <div class="card">
-        <p>
-          For support, business, or billing questions, please contact:
-        </p>
-        <ul>
-          <li>Email: <a href="mailto:hello@getqore.dev">hello@getqore.dev</a></li>
-        </ul>
-        <p>
-          We respond to all inquiries sent to this address.
-        </p>
-      </div>
+    <section class="why-section">
+        <div class="container">
+            <div style="text-align: center;">
+                <div class="section-label">The Problem</div>
+                <h2 class="section-title">Why QORE?</h2>
+                <p class="section-text" style="max-width: 600px; margin: 0 auto;">AI infrastructure today is fragmented. QORE consolidates the complexity into a single control surface.</p>
+            </div>
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-card-icon">API</div>
+                    <h3 class="why-card-title">Universal API Access</h3>
+                    <p class="why-card-text">Managing separate API keys, separate billing dashboards, and separate rate limits for every AI provider is operational overhead. QORE gives you one key across providers—one place to fund, monitor, and control your AI spend.</p>
+                </div>
+                <div class="why-card">
+                    <div class="why-card-icon">INT</div>
+                    <h3 class="why-card-title">Route Integrity</h3>
+                    <p class="why-card-text">AI providers can silently substitute a cheaper or different model than the one requested. QORE surfaces these substitutions: it compares requested-vs-actual provider and model, detects cost and latency anomalies, and classifies findings by severity—from <code style="color: var(--success);">no_issue</code> to <code style="color: var(--warning);">premium_integrity_violation</code>.</p>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <section>
-      <h2>About This Site</h2>
-      <div class="card">
-        <p>
-          This page is a public information site for QORE. It explains what the product
-          does, what customers purchase, how refunds and cancellations are handled, and
-          how to contact the business. It is not a marketplace, token sale, or financial
-          offering.
-        </p>
-      </div>
+    <section class="coverage-section">
+        <div class="container">
+            <div class="coverage-header">
+                <div class="section-label">Modalities</div>
+                <h2 class="section-title">SKU Categories</h2>
+                <p class="section-text" style="max-width: 520px; margin: 16px auto 0;">QORE supports seven distinct compute categories, each with normalized NTU pricing.</p>
+            </div>
+            <div class="coverage-grid">
+                <div class="coverage-item">
+                    <div class="coverage-icon">LLM</div>
+                    <div class="coverage-label">Language</div>
+                    <div class="coverage-sub">Text generation</div>
+                </div>
+                <div class="coverage-item">
+                    <div class="coverage-icon">IMG</div>
+                    <div class="coverage-label">Image</div>
+                    <div class="coverage-sub">Generation & edit</div>
+                </div>
+                <div class="coverage-item">
+                    <div class="coverage-icon">VID</div>
+                    <div class="coverage-label">Video</div>
+                    <div class="coverage-sub">Generation</div>
+                </div>
+                <div class="coverage-item">
+                    <div class="coverage-icon">AUD</div>
+                    <div class="coverage-label">Audio</div>
+                    <div class="coverage-sub">Speech & music</div>
+                </div>
+                <div class="coverage-item">
+                    <div class="coverage-icon">EMB</div>
+                    <div class="coverage-label">Embedding</div>
+                    <div class="coverage-sub">Vector encoding</div>
+                </div>
+                <div class="coverage-item">
+                    <div class="coverage-icon">WRK</div>
+                    <div class="coverage-label">Workflow</div>
+                    <div class="coverage-sub">Agent runs</div>
+                </div>
+                <div class="coverage-item">
+                    <div class="coverage-icon">WEB</div>
+                    <div class="coverage-label">Website</div>
+                    <div class="coverage-sub">Web automation</div>
+                </div>
+            </div>
+            <p class="coverage-note">All categories priced in NTU for unified budget management</p>
+        </div>
+    </section>
+
+    <section class="flow-section">
+        <div class="container">
+            <div class="flow-header">
+                <div class="section-label">Architecture</div>
+                <h2 class="section-title">How it works</h2>
+            </div>
+            <div class="flow-grid">
+                <div class="flow-line"></div>
+                <div class="flow-step">
+                    <div class="flow-icon">REQ</div>
+                    <div class="flow-label">Request</div>
+                    <div class="flow-desc">Incoming API call with model preference</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">ROUTE</div>
+                    <div class="flow-label">Route</div>
+                    <div class="flow-desc">Evaluate provider options and availability</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">SCORE</div>
+                    <div class="flow-label">Score</div>
+                    <div class="flow-desc">Assess quality, latency, and confidence signals</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">PRICE</div>
+                    <div class="flow-label">Price</div>
+                    <div class="flow-desc">Calculate NTU cost with current rate logic</div>
+                </div>
+                <div class="flow-step">
+                    <div class="flow-icon">RET</div>
+                    <div class="flow-label">Return</div>
+                    <div class="flow-desc">Deliver response with full route transparency</div>
+                </div>
+            </div>
+            <div style="max-width: 600px; margin: 60px auto 0; text-align: center;">
+                <p class="section-text" style="max-width: 100%; font-size: 13px;">The routing engine evaluates provider options, scores route quality and confidence, considers current pricing conditions, and can detect suspicious API or feedback manipulation signals—adapting routing behavior accordingly.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="clarification-section">
+        <div class="container">
+            <div class="clarification-header">
+                <div class="section-label">Clarity</div>
+                <h2 class="section-title">What QORE is not</h2>
+            </div>
+            <div class="clarification-grid">
+                <div class="clarification-card">
+                    <span class="clarification-badge">Not a Model</span>
+                    <h3 class="clarification-title">QORE is not an AI model</h3>
+                    <p class="clarification-text">QORE is a routing, pricing, and accounting layer for AI infrastructure. It does not generate AI responses—it routes requests to external providers.</p>
+                </div>
+                <div class="clarification-card">
+                    <span class="clarification-badge">No Training</span>
+                    <h3 class="clarification-title">No customer data training</h3>
+                    <p class="clarification-text">QORE does not use customer data to train any model because QORE contains no model. Routing decisions are based on system logic, not machine learning on user content.</p>
+                </div>
+                <div class="clarification-card">
+                    <span class="clarification-badge">Not Crypto</span>
+                    <h3 class="clarification-title">NTU is not a cryptocurrency</h3>
+                    <p class="clarification-text">NTU is purely an internal measurement unit used inside QORE software. It is not a token, currency, cryptocurrency, or financial asset of any kind.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="faq-section">
+        <div class="container">
+            <div class="faq-header">
+                <div class="section-label">Questions</div>
+                <h2 class="section-title">FAQ</h2>
+            </div>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3 class="faq-question">What does qore proxy do?</h3>
+                    <p class="faq-answer"><code style="background: var(--bg-tertiary); padding: 2px 6px; border-radius: 4px;">qore proxy</code> is a commercial engine command that routes live AI API calls through QORE with a per-call fee applied. It is not implemented in the public repository. A QORE Engine license is required.</p>
+                </div>
+                <div class="faq-item">
+                    <h3 class="faq-question">How do I get engine access?</h3>
+                    <p class="faq-answer">Contact <a href="mailto:hello@getqore.dev" style="color: var(--accent); text-decoration: none;">hello@getqore.dev</a> for licensing inquiries and engine access.</p>
+                </div>
+                <div class="faq-item">
+                    <h3 class="faq-question">What is the refund policy?</h3>
+                    <p class="faq-answer">All purchases are final. Refunds are available for duplicate charges, billing errors, unauthorized transactions, or where required by law.</p>
+                </div>
+                <div class="faq-item">
+                    <h3 class="faq-question">Does QORE store my request data?</h3>
+                    <p class="faq-answer">QORE processes API requests for routing purposes. Request data is not stored beyond operational requirements. QORE does not make claims about the data handling of third-party AI providers—users should review individual provider policies separately.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="policy-section">
+        <div class="container">
+            <div class="policy-grid">
+                <div class="policy-card">
+                    <div class="policy-card-title">Usage Policy</div>
+                    <div class="policy-card-text">NTU credits are non-refundable once consumed. All purchases are final except for verified billing errors.</div>
+                </div>
+                <div class="policy-card">
+                    <div class="policy-card-title">Credit Expiry</div>
+                    <div class="policy-card-text">Credits never expire.  Check documentation for updates.</div>
+                </div>
+                <div class="policy-card">
+                    <div class="policy-card-title">Data Handling</div>
+                    <div class="policy-card-text">QORE processes API requests for routing purposes. Request data is not stored beyond operational requirements.</div>
+                </div>
+                <div class="policy-card">
+                    <div class="policy-card-title">Service Terms</div>
+                    <div class="policy-card-text">Service availability and pricing may change. Rate limits and provider access subject to current policy.</div>
+                </div>
+            </div>
+
+            <div class="disclaimer-box">
+                <div class="disclaimer-title">Important Disclaimer</div>
+                <div class="disclaimer-text">
+                    <p><strong>QORE is not an AI model.</strong> It is a routing, pricing, and accounting layer for AI infrastructure. QORE does not generate AI responses—it routes requests to external providers.</p>
+                    <p>QORE does not use customer data to train any model because QORE contains no model. Routing decisions are based on system logic, not machine learning on user content.</p>
+                    <p>This page does not make claims about the data handling or training practices of third-party AI providers. Users should review individual provider policies separately.</p>
+                    <p style="margin-top: 12px; color: var(--text-secondary);">Licensed under MIT. For licensing inquiries or support: <a href="mailto:hello@getqore.dev" style="color: var(--accent); text-decoration: none;">hello@getqore.dev</a></p>
+                </div>
+            </div>
+        </div>
     </section>
 
     <footer>
-      <p>© 2026 QORE. Software and services for AI runtime control and NTU‑based economics.</p>
+        <div class="container">
+            <div class="footer-inner">
+                <div class="footer-brand">QORE</div>
+                <div class="footer-links">
+                    <a href="https://github.com/getqore/qore" class="footer-link" target="_blank">GitHub</a>
+                    <a href="mailto:hello@getqore.dev" class="footer-link">hello@getqore.dev</a>
+                </div>
+                <div class="footer-status"> Systems Operational</div>
+            </div>
+        </div>
     </footer>
-  </div>
+
+    <script>
+        // Scroll reveal
+        const sections = document.querySelectorAll('section');
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
