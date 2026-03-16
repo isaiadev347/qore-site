@@ -122,6 +122,26 @@ be posted here.
 
 ---
 
+## Production Status
+
+| Component | Status |
+|-----------|--------|
+| **Wallet persistence** | SQLite (WAL, thread-safe). Set `WALLET_BACKEND=sqlite` and `WALLET_SQLITE_PATH=./data/wallet.db`. |
+| **Live provider calls** | OpenAI and Anthropic via raw HTTP (no SDK required). Set `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`. |
+| **Ledger entries** | Every provider call is recorded with NTU amount, USD amount, tokens, provider, model, and chain hash. |
+| **API server** | `uvicorn server.app:app --host 0.0.0.0 --port 8000`. No Stripe required at startup. |
+| **CLI proxy** | `qore proxy --prompt "..."` executes a real call, deducts NTU, writes ledger entry. |
+
+```bash
+# Start with SQLite persistence
+WALLET_BACKEND=sqlite uvicorn server.app:app --port 8000
+
+# Execute a real provider call via CLI
+OPENAI_API_KEY=sk-... qore proxy --prompt "Hello" --provider openai --model gpt-4o-mini
+```
+
+---
+
 ## Install
 
 ```bash
