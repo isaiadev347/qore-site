@@ -172,35 +172,47 @@ qore diag run
 | `qore price ntu-rate` | Current NTU reference rate |
 | `qore price quote --sku <id> --in <N> --out <N>` | Quote a single SKU |
 | `qore price batch --file <path>` | Batch price from CSV/JSON |
-| `qore price list <category>` | Full pricing table — llm / image / video / audio / embedding / workflow / website |
+| `qore price list [category]` | Full pricing table — llm / image / video / audio / embedding / workflow / website |
 | `qore price frontier` | Frontier model pricing overview |
 | **Ledger** | |
 | `qore ledger snapshot` | Dashboard-style ledger summary |
-| `qore ledger history` | Recent ledger events |
+| `qore ledger history [--limit N]` | Recent ledger events |
 | **Wallet** | |
-| `qore wallet balance` | Current balance |
-| `qore wallet history` | Recent wallet events |
-| `qore wallet fund --amount <USD>` | Add funds via Stripe |
+| `qore wallet balance --user <id>` | Current NTU balance |
+| `qore wallet history --user <id>` | Recent wallet events |
+| `qore wallet fund --amount <USD>` | Add funds (direct ledger credit; Stripe when configured) |
+| `qore wallet topup --amount <USD>` | Trigger Stripe checkout from CLI |
 | `qore wallet limits` | Spend limits |
 | `qore wallet ntu-usage [--window-days N]` | NTU consumption over rolling window |
+| `qore wallet spend-report [--window-days N]` | NTU burn rate, projected runway, cost analytics |
 | **Auth** | |
-| `qore auth set --key <key>` | Store API credentials |
-| `qore auth show` | Display masked key |
-| `qore auth clear` | Remove credentials |
+| `qore auth set <key>` | Store API credentials (session + config file) |
+| `qore auth show` | Display masked key and auth configuration |
+| `qore auth clear` | Remove all stored credentials |
 | **Diagnostics** | |
 | `qore diag run` | Self-check: catalog, env, Stripe readiness, NTU consistency |
 | `qore diag ntu-consistency` | Verify NTU rate consistency across catalog |
 | **Policy** | |
-| `qore policy simulate --category <cat> --policy-file <path>` | Simulate NTU policy constraints |
+| `qore policy simulate --category <cat> --policy-file <path>` | Simulate NTU policy constraints against catalog |
+| `qore policy check --file <path>` | Validate a policy file before applying it |
 | **Route Integrity** | |
 | `qore route evaluate --requested-provider P --requested-model M --actual-provider P --actual-model M` | Evaluate route integrity: drift, severity, confidence |
+| `qore route benchmark --provider P --model M --runs N` | Latency p50/p95/p99, catch rate, NTU efficiency score |
+| **Provider** | |
+| `qore provider trust-score` | Trust scores per provider — uptime, drift history, substitution incidents |
+| **NTU** | |
+| `qore ntu rate` | Current NTU reference rate with pricing version |
+| `qore ntu explain` | Human-readable NTU explanation |
+| `qore ntu drift [--window-days N]` | NTU cost drift over time per provider |
+| **Transparency** | |
+| `qore explain --sku <id>` | Plain English: why a SKU was routed, frontier rank, what would change it |
+| `qore compare --sku-a <id> --sku-b <id> --in <N> --out <N>` | Side-by-side NTU and USD cost comparison |
 | **Engine Commands** ¹ | |
-| `qore proxy` | Route AI calls through QORE (commercial engine command) |
-| `qore closed` | CLOSED loop adaptive threshold control |
-| `qore dev` | Dev/debug surface for engine operators |
+| `qore proxy` | Route AI calls through QORE (engine license required) |
+| `qore closed` | CLOSED loop adaptive threshold control (engine license required) |
+| `qore dev` | Dev/debug surface (fund, reset-wallet, ledger dump) |
 
-¹ `qore proxy`, `qore closed`, and `qore dev` are commercial engine commands. They are
-**not implemented in this repository**. A QORE Engine license is required to use them.
+¹ `qore proxy` and `qore closed` require the private QORE Engine license.
 Contact [hello@getqore.dev](mailto:hello@getqore.dev).
 
 ---
