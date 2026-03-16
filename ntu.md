@@ -385,3 +385,5 @@ QORE software.
 **NTU is not a token, currency, cryptocurrency, or financial asset of any kind.**
 QORE is a software and services product, not a financial product. Nothing on this
 page constitutes financial advice.
+
+Patent pending.
