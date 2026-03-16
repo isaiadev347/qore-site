@@ -217,8 +217,7 @@ NTU is currently a **QORE-internal framework**: a proprietary normalization laye
 used within QORE's pricing, routing, and governance surfaces.
 
 The long-term goal is for NTU — or a derivative — to become a **candidate standard**
-for expressing AI compute economics across providers, analogous to how kilowatt-hours
-standardize energy pricing across sources.
+for expressing AI compute economics across providers.
 
 | Dimension              | Framework (now)                        | Candidate standard (future)             |
 |------------------------|----------------------------------------|-----------------------------------------|
